@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include<conio.h>
 #include<stdlib.h>
 #include<string.h>
 
@@ -45,7 +44,7 @@ void save(void);
 struct reminders{
 
     char date[11];
-    char reminder[256];
+    char reminder[512];
 
 } rem[MAX];
 
@@ -255,7 +254,7 @@ void view_cal(void){
 
     printf("To view [C] Calendar of year [D] Calender of specific month");
     do{
-        ch = getch();
+        ch = getchar();
         printf("\n");
 
         switch(ch){
@@ -285,14 +284,20 @@ void view_cal(void){
 //Adding a Reminder
 void add_reminder(void){
 
-    int i;
-
+    int i, num, count;
+    printf("Number of reminders you want to add: \n");
+    scanf("%d", &num);
+    count = 0;
     for(i=top; i<MAX; i++){
-        printf("\n\nEnter Date (dd/mm/yyyy) or ENTER to quit: ");
-        gets(rem[i].date);
-        if(!*rem[i].date) break;
+        printf("\n\nEnter Date (dd/mm/yyyy): ");
+        scanf("%s", rem[i].date);
         printf("Enter Reminder: ");
-        gets(rem[i].reminder);
+        scanf("%s", rem[i].reminder);
+        save();
+        count++;
+        if(count == num) {
+            break;
+        }
     }
 
     top = i;
@@ -306,8 +311,8 @@ int view_reminder(void){
     int i, found;
 
     printf("Enter Date (dd/mm/yyyy): ");
-    gets(date);
-    found =0;
+    scanf("%s", date);
+    found = 0;
     for(i=0; i<top; i++){
         if(!strcmp(date, rem[i].date)){
             printf("Reminder %d. %s - %s", i+1, rem[i].date, rem[i].reminder);
@@ -329,11 +334,9 @@ void edit_reminder(void){
     i=0;
     if(found==1){
         printf("Which Reminder do you want to edit: ");
-        gets(temp);
-        i = atoi(temp);
-        i=i--;
+        scanf("%d", &i);
         printf("\nEnter new reminder: ");
-        gets(rem[i].reminder);
+        scanf("%s", rem[i].reminder);
     }
     save();
 }
@@ -348,9 +351,7 @@ void delete_reminder(void){
     j=0;
     if(found==1){
         printf("Which Reminder do you want to delete: ");
-        gets(temp);
-        i = atoi(temp);
-        i=i--;
+        scanf("%d", &i);
         for(j=i; j<(top-1); j++){
             strcpy(rem[j].date,rem[j+1].date);
             strcpy(rem[j].reminder,rem[j+1].reminder);
@@ -376,37 +377,37 @@ void load_menu(void){
     printf("%12c[Q] Quit\n\n", x);
 
     do{
-        ch = getch();
+        ch = getchar();
         printf("\n");
 
         switch(ch){
             case 'c':
             case 'C': view_cal();
-                    reload_menu();
+                      reload_menu();
                     break;
             case 'v':
             case 'V': view_reminder();
-                    reload_menu();
+                      reload_menu();
                     break;
             case 'e':
             case 'E': edit_reminder();
-                    reload_menu();
+                      reload_menu();
                     break;
             case 'd':
             case 'D': delete_reminder();
-                    reload_menu();
+                      reload_menu();
                     break;
 
             case 'a':
             case 'A': add_reminder();
-                    reload_menu();
+                      reload_menu();
                     break;
             case'q':
             case'Q':printf("%20cMade by Mohsiur Rahman, Razibul Raquib \n%30cand Aqibur Rahman\n\n", x, x);
                     exit(0);
                     break;
 
-            default: printf("Wrong Choice! Enter Again: ");
+            default: printf("Enter Choice: ");
                     break;
         }
     }while(ch!='C' && ch!='V' && ch!='E' && ch!='A' && ch!='D' &&ch!='Q' && ch!='c' && ch!='v' && ch!='e' && ch!='a' && ch!='d' && ch!='Q');
@@ -421,19 +422,19 @@ void reload_menu(void){
     printf("[Q] Quit Application\n\n");
     char ch;
     do{
-        ch = getch();
+        ch = getchar();
         printf("\n");
 
         switch(ch){
             case'r':
-            case'R': system("cls");
+            case'R': system("clear");
                     load_menu();
                     break;
             case'q':
             case'Q':printf("%20cMade by Mohsiur Rahman, Razibul Raquib \n%30cand Aqibur Rahman\n\n", x, x);
                     exit(0);
                     break;
-            default: printf("Wrong Choice! Enter Again: ");
+            default: printf("Enter Choice:  ");
                     break;
 
         }
